@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>JSON Data by using JQuery</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Using online bootstrap 4 CDN -->
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+  <!-- This is offline bootstrap CDN in css and js folder to see project offline -->
+
+  <!-- <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/font-awesome.min.css">
+  <script src="js/jquery.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script> -->
+
+  <!-- <script src="/front-end_data.json"></script> -->
+
+  <style>
+
+body{
+  background:#d8e4f1;
+}
+
+  .last{
+    border-right: 1px solid lightgrey;
+    /* height: 120px; */
+  }
+
+.list-unstyled{
+  font-size:10px;
+  opacity:0.8;
+}
+
+  .btn{
+    border-radius: 25px;
+  }
+
+
+/* phone */
+@media (min-width: 576px){
+  .modal-dialog {
+      max-width: 650px;
+  }
+}
+
+
+@media (min-width: 320px){
+  #screenshot{
+    width: 262px;
+  }
+  #logo{
+    width: 100px;
+    border:none !important;
+  }
+}
+
+/* ipad */
+@media (min-width: 700px){
+  #screenshot{
+    width: 165px;
+  }
+  #logo{
+    width: 110px;
+  }
+}
+
+/* ipad pro */
+@media (min-width: 1024px){
+  #screenshot{
+    width:245px;
+  }
+  #logo{
+    width: 165px;
+  }
+}
+
+/* desktop */
+@media (min-width: 1200px){
+  #screenshot{
+    width:305px;
+    height:200px;
+  }
+  #logo{
+    height: 100px !important;
+    width: 204px;
+  }
+}
+
+#companyid, .roboto{
+  font-family:Roboto;
+}
+
+.lato{
+  font-family:Lato;
+}
+
+.bold{
+  font-weight: bold;
+}
+
+.san{
+  font-family: san-serif;
+}
+
+.web_icon{
+  font-size: 20px;
+}
+
+span{
+  font-size:15px;
+}
+
+  </style>
+</head>
+<body>
+
+<div class="container" id="addcard">
+</div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="datamodal" tabindex="-1" role="dialog" aria-labelledby="datamodalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="companyid"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body" id="modalbody">
+
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+<!-- modal ended -->
+
+
+
+<script>
+  var data = [];
+
+  $.ajax({
+    'url':'/brainsfeed/front-end_data.json',
+    'method':'POST',
+    'data': {},
+    success:function(response){
+      //console.log(response);
+      data = JSON.parse(response);
+
+      for(let x in data){
+
+        var  specialization = '';
+        for(let y in data[x]['specialties']){
+          specialization = specialization + `<li class="ml-2 mr-3"><li>${data[x]['specialties'][y]}</li>`;
+        }
+
+        $('#addcard').append(`
+          <div class="row my-4">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+              <div class="card">
+                <form>
+                  <div class="row row px-4 pt-3">
+                    <div class="col-md-5">
+                      <h3 style="font-family:Roboto">${data[x]['company_name']}</h3>
+                      <p style="font-family:san-serif;font-size:15px;">${data[x]['title_']}</p>
+                    </div>
+                    <div class="col-md-3">
+                      <ul class="d-flex list-unstyled inline-block">
+        								${data[x]['facebookUrl'] ? `<li class="mr-3"><a href="${data[x]['facebookUrl']}" title="facebook"><i class="fa fa-facebook web_icon"></i></a></li>` : ''}
+        								${data[x]['twitterUrl'] ? `<li class="mr-3"><a href="${data[x]['twitterUrl']}" title="twitter"><i class="fa fa-twitter web_icon"></i></a></li>` : ''}
+        								${data[x]['linkedinUrl'] ? `<li class="mr-3"><a href="${data[x]['linkedinUrl']}" title="linkedin"><i class="fa fa-linkedin web_icon"></i></a></li>` : ''}
+                      </ul>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="logo">
+          							<img src="${data[x]['logo']}" alt="logo" id="logo" />
+          						</div>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row p-4">
+                    <div class="col-md-6 last">
+                      <p style="font-family:Lato">${data[x]['Short_description']}</p>
+                      <h6 style="font-weight:bold;"> Speciliaties: </h6>
+                      <ul class="list-unstyled">
+                        ${specialization}
+                      </ul>
+                      <button type="button" class="btn btn-primary mt-3" onclick="showmodal(${x})">
+                      Learn More...
+                      </button>
+                      </div>
+                      <div class="col-md-6 mt-3 mt-lg-0 mt-sm-0">
+                        <div class="screenshot border border-1 p-2">
+                          <img src="${data[x]['screenshot']}" alt="screenshot" id="screenshot" />
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="col-md-2"></div>
+            </div>
+            `);
+          }
+    },
+    error:function(error){
+      console.log(error);
+    }
+  });
+
+function showmodal(a){
+
+  $("#companyid").text(data[a]['company_name']);
+
+  $("#modalbody").html(`
+
+    <h6><span class="bold">Company Type:</span> "${data[a]['type']}"</h6>
+      <p class="mt-3 lato">${data[a]['Long_description']}</p><hr>
+      <span class="d-flex">
+        <span class="bold">Address: </span>
+        <span class="ml-2 san">${data[a]['companyAddress']}</span>
+      </span>
+
+      <div class="row">
+        <div class="col-md-12">
+          <span class="d-flex">
+            <span class="bold">Founded In: </span>
+            <span class="ml-2">${data[a]['founded']}</span>
+          </span>
+          <span class="d-flex">
+            <span class="bold">Email: </span>
+            <span class="ml-2 san">${data[a]['email']}</span>
+          </span>
+          <span class="d-flex">
+            <span class="bold">Our Website: </span>
+            <span class="ml-2 ">
+            	${data[a]['website_'] ? `<a href="${data[a]['website_']}" title="website"><i class="fa fa-globe web_icon"></i></a>` : ''}
+            </span>
+          </span>
+
+        </div>
+      </div>
+      <hr>
+
+      <div class="row">
+        <div class="col-md-6">
+          <span class="d-flex">
+            <span class="bold">Paid-Not: </span>
+            <span class="ml-2 san">${data[a]['paid_not']}</span>
+          </span>
+          <span class="d-flex">
+            <span class="bold">Rating: </span>
+            <span class="ml-2">${data[a]['rating']}</span>
+          </span>
+        </div>
+        <div class="col-md-6">
+          <span class="d-flex">
+            <span class="bold">Industry: </span>
+            <span class="ml-2 san">${data[a]['industry']}</span>
+          </span>
+          <span class="d-flex">
+            <span class="bold">Datapoints: </span>
+            <span class="ml-2">"${data[a]['datapoints']}"</span>
+          </span>
+        </div>
+      </div><hr>
+
+      <div class="row">
+      <div class="col-md-6">
+        <span class="d-flex">
+          <span class="bold">API Provided: </span>
+          ${data[a]['API Provided'] ? `<span class="ml-2 san">${data[a]['API Provided']}</span>` : ''}
+        </span>
+        <span class="d-flex">
+          <span class="bold">GEO Coverage: </span>
+          ${data[a]['Geo_coverage'] ? `<span class="ml-2 san">${data[a]['Geo_coverage'].join(',')}</span>` : '' }
+        </span>
+        <span class="d-flex">
+          <span class="bold">headquarters: </span>
+          ${data[a]['headquarters'] ? `<span class="ml-2 san">${data[a]['headquarters']}</span>` : ''}
+        </span>
+      </div>
+        <div class="col-md-6">
+        <span class="d-flex">
+          <span class="bold">fundingRecent: </span>
+          ${data[a]['fundingRecent'] ? `<span class="ml-2 san">${data[a]['fundingRecent']}</span>` : ''}
+        </span>
+          <span class="d-flex">
+            <span class="bold">fundingTotal: </span>
+           ${data[a]['fundingTotal'] ? `<span class="ml-2 san">${data[a]['fundingTotal']}</span>` : ''}
+          </span>
+        </div>
+      </div><hr>
+
+      <span class="d-flex">
+        <span class="bold">Analysis: </span>
+        <span class="ml-2 san">${data[a]['Analysis']}</span>
+      </span>
+`);
+
+      $("#datamodal").modal('show');
+}
+</script>
+
+</body>
+</html>
